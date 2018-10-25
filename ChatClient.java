@@ -35,3 +35,26 @@ public class ChatClient implements Runnable {
             System.err.println("Couldn't get I/O for the connection to the host "
                     + ip);
         }
+if (clientSocket != null && outS != null && inS != null) {
+            try {
+                new Thread(new ChatClient()).start();
+                while (!closed) {
+                    outS.println(inputLine.readLine().trim());
+                }
+                outS.close();
+                inS.close();
+                clientSocket.close();
+            } catch (IOException e) {
+                System.err.println("IOException:  " + e);
+            } } }
+    public void run() {
+        String responseLine;
+        try {
+            while ((responseLine = inS.readLine()) != null) {
+                System.out.println(responseLine);
+                if (responseLine.indexOf("* Bye") != -1)
+                    break; }
+            closed = true;
+        } catch (IOException e) {
+            System.err.println("IOException:  " + e);
+          } }}
