@@ -14,4 +14,24 @@ public class ChatClient implements Runnable {
     private static boolean closed = false;
     public static void main(String[] args) {
         int portNumber = 6969;
-        String ip = "172.20.10.12"; // IP we're connected on, otherwise use "localhost"
+        String ip = "localhost"; // IP we're connected on, otherwise use "localhost"
+        if (args.length < 2) {
+            System.out
+                    .println(" <host> <portNumber>\n"
+                            + "host=" + ip + ", portNumber=" + portNumber);
+        } else {
+            ip = args[0];
+            portNumber = Integer.valueOf(args[1]).intValue();
+        }
+        try {
+            clientSocket = new Socket(ip, portNumber);
+            inputLine = new BufferedReader(new InputStreamReader(System.in));
+            outS = new PrintStream(clientSocket.getOutputStream());
+            inS = new DataInputStream(clientSocket.getInputStream());
+        }
+        catch (UnknownHostException e) {
+            System.err.println("Don't know about host " + ip);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to the host "
+                    + ip);
+        }
